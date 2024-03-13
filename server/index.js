@@ -1,5 +1,7 @@
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const { createAdapter } = require("@socket.io/cluster-adapter");
+const { setupWorker } = require("@socket.io/sticky");
 const redisStreamAdapter = require("@socket.io/redis-streams-adapter");
 const Redis = require("ioredis");
 const uuid = require("uuid");
@@ -13,10 +15,14 @@ dotenv.config();
 
   const httpServer = createServer();
 
-  const io = new Server(httpServer, {
+	const io = new Server(httpServer, {
 		transports: ["websocket", "polling"],
 		adapter: redisAdapter,
 	});
+
+	io.adapter(createAdapter());
+
+	setupWorker(io);
 
 	io.use(async (socket, next) => {
 		const sessionID = socket.handshake.auth.session;

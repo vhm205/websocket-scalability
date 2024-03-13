@@ -4,6 +4,7 @@
     "dev": "node index.js"
   },
   "dependencies": {
+    "@socket.io/cluster-adapter": "^0.2.2",
     "@socket.io/redis-streams-adapter": "^0.2.1",
     "@socket.io/sticky": "^1.0.4",
     "dotenv": "^16.4.5",

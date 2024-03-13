@@ -8,7 +8,8 @@ const useSocket = () => {
 	useEffect(() => {
     const session = localStorage.getItem("session")
     // http://35.247.134.118:4000
-		socketRef.current = io(`localhost:4000`, {
+		// socketRef.current = io(`localhost:4000`, {
+		socketRef.current = io(`http://35.247.134.118:4001`, {
 			transports: ["websocket"],
       requestTimeout: 5000,
       auth: {
