@@ -6,11 +6,18 @@ const useSocket = () => {
 	const socketRef = useRef<Socket>();
 
 	useEffect(() => {
-		socketRef.current = io(`http://35.247.134.118:4000`, {
+    const session = localStorage.getItem("session")
+    // http://35.247.134.118:4000
+		socketRef.current = io(`localhost:4000`, {
 			transports: ["websocket"],
+      requestTimeout: 5000,
+      auth: {
+        session: (session && session !== "null") ? session : null,
+      }
 		});
+    const socket = socketRef.current
 
-		const engine = socketRef.current?.io?.engine;
+		const engine = socket?.io?.engine;
 		console.log(engine?.transport?.name); // in most cases, prints "polling"
 
 		engine?.once("upgrade", () => {
@@ -18,22 +25,26 @@ const useSocket = () => {
 			console.log(engine.transport.name); // in most cases, prints "websocket"
 		});
 
-		socketRef.current.on("connect", () => {
+		socket.on("sync_session", (session) => {
+      localStorage.setItem("session", session);
+		});
+
+		socket.on("connect", () => {
 			console.log("Connected to server");
 			setIsConnected(true);
 		});
 
-		socketRef.current.on("disconnect", () => {
+		socket.on("disconnect", () => {
 			console.log("Disconnected from server");
 			setIsConnected(false);
 		});
 
-		socketRef.current.on("connect_error", (error) => {
+		socket.on("connect_error", (error) => {
 			console.log("Error connecting to server:", error);
 		});
 
 		return () => {
-			socketRef.current?.disconnect();
+			socket.disconnect();
 		};
 	}, []);
 
