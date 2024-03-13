@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.7.4",
+    "uuid": "^9.0.1"
+  }
+}
