@@ -8,7 +8,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 (async () => {
-  console.log({ redis: process.env.REDIS_URL, port: process.env.SOCKET_PORT });
   const redisClient = new Redis(process.env.REDIS_URL || "redis://localhost:6379");
   const redisAdapter = redisStreamAdapter.createAdapter(redisClient);
 
